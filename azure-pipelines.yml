@@ -13,3 +13,46 @@ stages:
         pool:
           vmimage: windows-latest
         steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Template Deployment'
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Arm Service Connection'
+              subscriptionId: '247d910c-a6b1-4062-b8fe-792f3934270b'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'ArmResourceGroup'
+              location: 'East US'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.json'
+              csmParametersFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.parameters.json'
+              deploymentMode: 'Validation'
+          - task: AzurePowerShell@5
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'InlineScript'
+              Inline: 'Install-Module Az.Resources -RequiredVersion 1.12.1-preview -AllowPrerelease -Force -Scope CurrentUser'
+              azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
+            displayName: 'Display Resources'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'InlineScript'
+              Inline: |
+                $Parameters = @{
+                  ResourcegroupName     = "ArmResourceGroup"
+                  Templatefile          = ".\StorageAccount\azuredeploy.json"
+                  TemplateParameterfile = ".\StorageAccount\azuredeploy.parameters.json"
+                  Mode                  = 'Incremental'
+                 }
+                $Result = Get-AzResourceGroupDeploymentWhatIfResult @Parameters
+                $Result
+              azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
+            displayName: 'Check for deletion'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(Build.SourcesDirectory)/Tests/CheckForDeletion.ps1'
+              ScriptArguments: '-ResourceGroup ArmResourceGroup'
+              FailOnStandardError: true
+              azurePowerShellVersion: 'LatestVersion'
