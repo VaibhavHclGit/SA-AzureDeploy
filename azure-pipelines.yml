@@ -26,12 +26,12 @@ stages:
               csmFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.json'
               csmParametersFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.parameters.json'
               deploymentMode: 'Validation'
-          - task: AzurePowerShell@5
-            inputs:
-              azureSubscription: 'Arm Service Connection'
-              ScriptType: 'InlineScript'
-              Inline: 'Install-Module Az.Resources -RequiredVersion 1.12.1-preview -AllowPrerelease -Force -Scope CurrentUser'
-              azurePowerShellVersion: 'LatestVersion'
+          # - task: AzurePowerShell@5
+          #   inputs:
+          #     azureSubscription: 'Arm Service Connection'
+          #     ScriptType: 'InlineScript'
+          #     Inline: 'Install-Module Az.Resources -RequiredVersion 1.12.1-preview -AllowPrerelease -Force -Scope CurrentUser'
+          #     azurePowerShellVersion: 'LatestVersion'
           - task: AzurePowerShell@5
             displayName: 'Display Resources'
             inputs:
@@ -47,12 +47,12 @@ stages:
                 $Result = Get-AzResourceGroupDeploymentWhatIfResult @Parameters
                 $Result
               azurePowerShellVersion: 'LatestVersion'
-          # - task: AzurePowerShell@5
-          #   displayName: 'Check for deletion'
-          #   inputs:
-          #     azureSubscription: 'Arm Service Connection'
-          #     ScriptType: 'FilePath'
-          #     ScriptPath: '$(Build.SourcesDirectory)/Tests/CheckForDeletion.ps1'
-          #     ScriptArguments: '-ResourceGroup ArmResourceGroup'
-          #     FailOnStandardError: true
-          #     azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
+            displayName: 'Check for deletion'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(Build.SourcesDirectory)/Tests/CheckForDeletion.ps1'
+              ScriptArguments: '-ResourceGroup ArmResourceGroup'
+              FailOnStandardError: true
+              azurePowerShellVersion: 'LatestVersion'
