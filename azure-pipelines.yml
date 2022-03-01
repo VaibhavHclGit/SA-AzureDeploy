@@ -58,9 +58,16 @@ stages:
               FailOnStandardError: true
               azurePowerShellVersion: 'LatestVersion'
           - task: AzurePowerShell@5
+            displayName: 'Remove Powershell'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'InlineScript'
+              Inline: 'Remove-Module -Name Az.Resources -ErrorAction SilentlyContinue'
+              azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
             displayName: 'UnInstall Powershell'
             inputs:
               azureSubscription: 'Arm Service Connection'
               ScriptType: 'InlineScript'
-              Inline: 'Remove-Module -Name Az -ErrorAction SilentlyContinue'
+              Inline: 'Uninstall-Module -Name Az.Resources -AllVersions'
               azurePowerShellVersion: 'LatestVersion'
