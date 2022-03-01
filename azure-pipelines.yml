@@ -26,13 +26,13 @@ stages:
               csmFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.json'
               csmParametersFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.parameters.json'
               deploymentMode: 'Validation'
-          # - task: AzurePowerShell@5
-          #   displayName: 'Install Powershell'
-          #   inputs:
-          #     azureSubscription: 'Arm Service Connection'
-          #     ScriptType: 'InlineScript'
-          #     Inline: 'Install-Module Az.Resources -RequiredVersion 1.12.1-preview -AllowPrerelease -Force -Scope CurrentUser'
-          #     azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
+            displayName: 'Install Powershell'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'InlineScript'
+              Inline: 'Install-Module Az.Resources -RequiredVersion 1.12.1-preview -AllowPrerelease -Force -Scope CurrentUser'
+              azurePowerShellVersion: 'LatestVersion'
           - task: AzurePowerShell@5
             displayName: 'Display Resources'
             inputs:
@@ -64,10 +64,10 @@ stages:
               ScriptType: 'InlineScript'
               Inline: 'Remove-Module -Name Az.Resources -ErrorAction SilentlyContinue'
               azurePowerShellVersion: 'LatestVersion'
-          - task: AzurePowerShell@5
-            displayName: 'UnInstall Powershell'
-            inputs:
-              azureSubscription: 'Arm Service Connection'
-              ScriptType: 'InlineScript'
-              Inline: 'Uninstall-Module -Name Az.Resources -AllVersions'
-              azurePowerShellVersion: 'LatestVersion'
+          # - task: AzurePowerShell@5
+          #   displayName: 'UnInstall Powershell'
+          #   inputs:
+          #     azureSubscription: 'Arm Service Connection'
+          #     ScriptType: 'InlineScript'
+          #     Inline: 'Uninstall-Module -Name Az.Resources -AllVersions'
+          #     azurePowerShellVersion: 'LatestVersion'
