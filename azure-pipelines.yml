@@ -27,6 +27,7 @@ stages:
               csmParametersFile: '$(Build.SourcesDirectory)/StorageAccount/azuredeploy.parameters.json'
               deploymentMode: 'Validation'
           # - task: AzurePowerShell@5
+          #   displayName: 'Install Powershell'
           #   inputs:
           #     azureSubscription: 'Arm Service Connection'
           #     ScriptType: 'InlineScript'
@@ -55,4 +56,11 @@ stages:
               ScriptPath: '$(Build.SourcesDirectory)/Tests/CheckForDeletion.ps1'
               ScriptArguments: '-ResourceGroup ArmResourceGroup'
               FailOnStandardError: true
+              azurePowerShellVersion: 'LatestVersion'
+          - task: AzurePowerShell@5
+            displayName: 'UnInstall Powershell'
+            inputs:
+              azureSubscription: 'Arm Service Connection'
+              ScriptType: 'InlineScript'
+              Inline: 'Remove-Module -Name Az -ErrorAction SilentlyContinue'
               azurePowerShellVersion: 'LatestVersion'
